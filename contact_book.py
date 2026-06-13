@@ -12,6 +12,7 @@ while True:
     print("3. Search contact")
     print("4. Delete contact")
     print("5. Exit")
+    print("6. Edit contact")
     choice=int(input("You chose:"))
     if choice == 5:
         break
@@ -62,3 +63,28 @@ while True:
                      json.dump(contacts, f)
         if found == False:
                 print("Contact not found")
+
+    elif choice == 6:
+         search = input("Enter name to search: ")
+         found = False
+         for contact in contacts:
+             if contact["name"].lower() == search.lower():
+                print("Name: ", contact["name"])
+                print("Phone: ", contact["phone"])
+                print("Email: ", contact["email"])
+                found = True
+                existing_contact = contact
+         if found == True:
+            print("Enter details to update or press Enter to keep old")
+            new_name = input("Enter New Name: ")
+            new_phone = input("Enter New phone: ")
+            new_email = input("Enter New email: ")
+            existing_contact["name"]=new_name or existing_contact["name"]
+            existing_contact["phone"]=new_phone or existing_contact["phone"]
+            existing_contact["email"]=new_email or existing_contact["email"]
+            with open("contact.json", "w") as f:
+                     json.dump(contacts, f)
+            print("Contact updated!")
+
+         elif found == False:
+            print("Contact not found.")
