@@ -7,7 +7,7 @@ except:
 
 def list_tasks(tasks):
     for index, task in enumerate(tasks):
-            print(index+1 , task["name"] , task.get("due" , "No date"))
+            print(index+1 , task["name"] , task.get("due" , "No date"), task.get("priority" , "No priority"))
 
 def save_tasks(tasks):
     with open("tasks.json", "w") as f:
@@ -16,7 +16,13 @@ def save_tasks(tasks):
 def add_tasks(tasks):
     name=input("Enter task name: ")
     date=input("Enter due date: ")
-    task={"name":name , "done":False , "due":date}
+    while True:
+         priority = input("Enter priority (High/Medium/Low): ")
+         if priority.lower() in ["high" , "medium" , "low"]:
+              priority = priority.capitalize()
+              break
+         print("Invalid! Please enter High, Medium or Low")
+    task={"name":name , "done":False , "due":date , "priority":priority}
     tasks.append(task)
     print("Task added!")
     save_tasks(tasks)
@@ -26,6 +32,8 @@ def show_tasks(tasks):
             print("No tasks yet!")
     else:
         done_count=0
+        priority_order = {"High":1, "Medium":2, "Low":3, "No priority":4}
+        tasks.sort(key=lambda task: priority_order.get(task.get("priority", "No priority"), 4))
         for index, task in enumerate(tasks):
             if task["done"] == True:
                     status="Done"
@@ -33,7 +41,8 @@ def show_tasks(tasks):
             else:
                     status="Pending"
                 
-            print(index +1, task["name"], status , task.get("due", "No dates"))
+            print(index +1, task["name"], status , task.get("due", "No dates"), task.get("priority" , "No priority"))
+        
         print(done_count, " of ",len(tasks), " tasks done.")
 
 def mark_done(tasks):
