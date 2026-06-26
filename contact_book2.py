@@ -1,6 +1,11 @@
 from datetime import datetime
 import requests
 import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 CONTACTS_FILE="contacts_capstone.json"
 
 def load_contacts():   
@@ -52,12 +57,12 @@ def view_contacts():
 def days_until_birthday(birthday_str):
     try:
         birthday_date=datetime.strptime(birthday_str, "%Y-%m-%d")
-        today=datetime.now()
+        today=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         birthday_this_year=birthday_date.replace(year=today.year)
         if birthday_this_year<today:
             birthday_this_year=birthday_date.replace(year=today.year+1)
-        days_untill = birthday_this_year - today
-        return days_untill.days
+        days_until = birthday_this_year - today
+        return days_until.days
     except ValueError:
         print("Invalid date format. Please use YYYY-MM-DD.")
         return None
@@ -76,7 +81,7 @@ def check_upcoming_birthdays(contacts, days=7):
         print("Birthday not upcoming!")
 
 def get_public_holidays(country_code, year):
-    api_key="D7PXPPQo8VcRvqyIUVCL8eGCdT1VEd8M"
+    api_key=os.getenv('CALENDARIFIC_API_KEY')
     url=f"https://calendarific.com/api/v2/holidays?api_key={api_key}&country={country_code}&year={year}"
     # Holiday data provided by Calendarific (calendarific.com)
     try:

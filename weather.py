@@ -1,5 +1,9 @@
 import requests
 import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def choices():
     unit_choice = input("Choose units - Celsius or Fahrenheit? (C/F): ")
@@ -27,7 +31,7 @@ def save_favorites(favorites):
 
 def get_forecast(city,units,temp_symbol):
     try:
-        response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid=b30ee619cea83fed538d5730af750472&units={units}")
+        response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={os.getenv('OPENWEATHER_API_KEY')}&units={units}")
         if response.status_code == 200:
             for entry in response.json()["list"]:
                 if "12:00:00" in entry["dt_txt"]:                                  
@@ -48,7 +52,7 @@ def get_forecast(city,units,temp_symbol):
       
 def get_current_weather(city,units,temp_symbol):    
     try:
-        response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&units={units}&appid=b30ee619cea83fed538d5730af750472")
+        response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&units={units}&appid={os.getenv('OPENWEATHER_API_KEY')}")
         if response.status_code == 200:
             data = response.json()                      
             temperature = data["main"]["temp"]
@@ -63,6 +67,7 @@ def get_current_weather(city,units,temp_symbol):
             print("Weather condition: ", condition)
         else:
             print("City not found, please try again")
+            print("staus code: ",response.status_code)
     except requests.exceptions.ConnectionError:
         print("No internet connection, please check your network")
 
